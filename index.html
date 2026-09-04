@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flowloop AI — Automation Studio</title>
+<meta name="description" content="Flowloop AI builds custom AI automation and modern company websites for small and mid-sized businesses. Join the waitlist for early access.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:      #0B1413;
+    --surface:    #111E1C;
+    --surface-2:  #182523;
+    --ink:        #ECF2ED;
+    --ink-soft:   #8FA69E;
+    --line:       #3A5A51;
+    --line-soft:  #1E2E2A;
+    --accent:     #E2833A;
+    --accent-ink: #171009;
+    --accent-2:   #5FC9A8;
+    --shadow:     0 1px 0 rgba(0,0,0,0.45);
+    --radius:     3px;
+    --maxw:       1120px;
+    color-scheme: dark;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ -webkit-text-size-adjust:100%; }
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    background-image:
+      linear-gradient(var(--line-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size: 48px 48px;
+    background-attachment: local;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; }
+  }
+
+  h1,h2,h3{
+    font-family:"Big Shoulders Display", ui-sans-serif, system-ui, sans-serif;
+    font-weight:800;
+    letter-spacing:0.01em;
+    line-height:0.94;
+    margin:0;
+    text-wrap:balance;
+    color:var(--ink);
+  }
+  .mono{
+    font-family:"IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  }
+  .eyebrow{
+    font-family:"IBM Plex Mono", ui-monospace, monospace;
+    font-size:0.72rem;
+    font-weight:600;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--accent-2);
+  }
+  a{ color:inherit; }
+  p{ color:var(--ink-soft); max-width:60ch; }
+
+  .wrap{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:0 28px;
+  }
+
+  /* ---------- corner ticks (blueprint sheet marks) ---------- */
+  .sheet{
+    position:relative;
+    border-top:1px solid var(--line-soft);
+  }
+  .sheet::before,
+  .sheet::after{
+    content:"";
+    position:absolute;
+    top:-1px;
+    width:9px;
+    height:9px;
+    border-top:1.5px solid var(--line);
+  }
+  .sheet::before{ left:28px; border-left:1.5px solid var(--line); }
+  .sheet::after{ right:28px; border-right:1.5px solid var(--line); }
+
+  .sec-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    padding:20px 0 44px;
+  }
+  .sec-head .num{
+    color:var(--accent);
+    font-size:0.78rem;
+    font-weight:600;
+  }
+  .sec-head .title{
+    font-size:0.78rem;
+    font-weight:600;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .sec-head .rule{
+    flex:1;
+    height:1px;
+    background:var(--line-soft);
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky;
+    top:0;
+    z-index:40;
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 0;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none;
+    color:var(--ink);
+  }
+  .brand-mark{
+    width:30px; height:30px;
+    flex:none;
+  }
+  .brand-name{
+    font-family:"Big Shoulders Display", sans-serif;
+    font-weight:800;
+    font-size:1.28rem;
+    letter-spacing:0.01em;
+  }
+  .brand-name em{
+    font-style:normal;
+    color:var(--accent);
+  }
+  nav.links{
+    display:flex;
+    align-items:center;
+    gap:28px;
+  }
+  nav.links a{
+    text-decoration:none;
+    font-size:0.92rem;
+    font-weight:500;
+    color:var(--ink-soft);
+  }
+  nav.links a:hover{ color:var(--ink); }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.82rem;
+    font-weight:600;
+    letter-spacing:0.02em;
+    text-decoration:none;
+    padding:10px 18px;
+    border-radius:var(--radius);
+    border:1px solid var(--ink);
+    color:var(--accent-ink);
+    background:var(--accent);
+    border-color:var(--accent);
+    cursor:pointer;
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); box-shadow:0 4px 0 rgba(0,0,0,0.08); }
+  .btn:focus-visible{ outline:2px solid var(--accent-2); outline-offset:2px; }
+  .btn.ghost{
+    background:transparent;
+    color:var(--ink);
+    border-color:var(--line);
+  }
+  .btn.small{ padding:8px 14px; font-size:0.76rem; }
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding:64px 0 56px;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.05fr 0.95fr;
+    gap:56px;
+    align-items:center;
+  }
+  .hero h1{
+    font-size:clamp(2.6rem, 5.4vw, 4.3rem);
+    margin-top:14px;
+  }
+  .hero h1 .accent{ color:var(--accent); }
+  .hero p.lead{
+    font-size:1.08rem;
+    margin-top:20px;
+    max-width:48ch;
+  }
+  .hero-ctas{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    margin-top:30px;
+    flex-wrap:wrap;
+  }
+  .hero-ctas .note{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.76rem;
+    color:var(--ink-soft);
+  }
+  .diagram-card{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--surface);
+    padding:18px 18px 10px;
+    box-shadow:var(--shadow);
+  }
+  .diagram-card .cap{
+    display:flex;
+    justify-content:space-between;
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.68rem;
+    letter-spacing:0.08em;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    padding-bottom:10px;
+    border-bottom:1px dashed var(--line-soft);
+    margin-bottom:6px;
+  }
+  .diagram-card svg{ display:block; width:100%; height:auto; }
+
+  /* ---------- problem strip ---------- */
+  .problem{
+    padding:8px 0 8px;
+  }
+  .problem-grid{
+    display:grid;
+    grid-template-columns:0.9fr 1.1fr;
+    gap:48px;
+    padding-bottom:52px;
+  }
+  .problem-grid h2{ font-size:clamp(1.7rem, 3vw, 2.3rem); }
+  .problem-list{
+    list-style:none;
+    margin:0; padding:0;
+    display:grid;
+    gap:16px;
+  }
+  .problem-list li{
+    display:grid;
+    grid-template-columns:22px 1fr;
+    gap:12px;
+    font-size:0.98rem;
+    color:var(--ink-soft);
+    padding-bottom:16px;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .problem-list li:last-child{ border-bottom:none; padding-bottom:0; }
+  .problem-list .x{
+    font-family:"IBM Plex Mono", monospace;
+    color:var(--accent);
+    font-weight:600;
+  }
+  .problem-list strong{ color:var(--ink); font-weight:600; }
+
+  /* ---------- services ---------- */
+  .services{ padding:8px 0 8px; }
+  .svc-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:1px;
+    background:var(--line-soft);
+    border:1px solid var(--line-soft);
+    margin-bottom:56px;
+  }
+  .svc{
+    background:var(--surface);
+    padding:26px 22px 24px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    min-height:230px;
+  }
+  .svc .tag{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.68rem;
+    color:var(--accent-2);
+    letter-spacing:0.06em;
+  }
+  .svc h3{
+    font-size:1.28rem;
+    font-weight:700;
+  }
+  .svc p{ font-size:0.92rem; margin:0; }
+
+  /* ---------- process ---------- */
+  .process{ padding:8px 0 8px; }
+  .timeline{
+    position:relative;
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:0;
+    padding-top:6px;
+    margin-bottom:60px;
+  }
+  .timeline::before{
+    content:"";
+    position:absolute;
+    top:15px;
+    left:0; right:0;
+    height:1px;
+    background:repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 12px);
+  }
+  .step{
+    position:relative;
+    padding:0 16px 0 0;
+  }
+  .step .dot{
+    width:11px; height:11px;
+    border-radius:50%;
+    background:var(--paper);
+    border:2px solid var(--accent);
+    position:relative;
+    z-index:2;
+    margin-bottom:18px;
+  }
+  .step .n{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.72rem;
+    color:var(--ink-soft);
+    display:block;
+    margin-bottom:6px;
+  }
+  .step h3{
+    font-size:1.05rem;
+    font-weight:700;
+    margin-bottom:8px;
+    line-height:1.15;
+  }
+  .step p{ font-size:0.86rem; margin:0; }
+
+  /* ---------- waitlist ---------- */
+  .waitlist{ padding:8px 0 90px; }
+  .wl-card{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--surface);
+    box-shadow:var(--shadow);
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+  .wl-info{
+    padding:44px 40px;
+    border-right:1px solid var(--line-soft);
+  }
+  .wl-info h2{ font-size:clamp(1.7rem, 3vw, 2.2rem); margin-top:10px;}
+  .wl-info p{ margin-top:16px; font-size:0.96rem; }
+  .wl-perks{
+    list-style:none;
+    padding:0; margin:26px 0 0;
+    display:grid;
+    gap:12px;
+  }
+  .wl-perks li{
+    font-size:0.88rem;
+    color:var(--ink-soft);
+    display:grid;
+    grid-template-columns:16px 1fr;
+    gap:10px;
+  }
+  .wl-perks .chk{ color:var(--accent-2); font-family:"IBM Plex Mono", monospace; font-weight:600; }
+
+  .wl-form{ padding:44px 40px; }
+  .field{ margin-bottom:18px; display:flex; flex-direction:column; gap:6px; }
+  .field label{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.7rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .field input,
+  .field select,
+  .field textarea{
+    font-family:"IBM Plex Sans", sans-serif;
+    font-size:0.95rem;
+    padding:11px 12px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--paper);
+    color:var(--ink);
+  }
+  .field textarea{ resize:vertical; min-height:70px; }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus{
+    outline:2px solid var(--accent-2);
+    outline-offset:1px;
+  }
+  .wl-form .btn{ width:100%; justify-content:center; padding:13px; font-size:0.86rem; margin-top:4px;}
+  .wl-privacy{
+    font-size:0.74rem;
+    color:var(--ink-soft);
+    margin-top:14px;
+    max-width:none;
+  }
+  .form-msg{
+    display:none;
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.8rem;
+    padding:12px 14px;
+    border-radius:var(--radius);
+    margin-top:14px;
+  }
+  .form-msg.show{ display:block; }
+  .form-msg.ok{ background:color-mix(in srgb, var(--accent-2) 16%, transparent); color:var(--accent-2); border:1px solid var(--accent-2); }
+  .form-msg.err{ background:color-mix(in srgb, var(--accent) 14%, transparent); color:var(--accent); border:1px solid var(--accent); }
+  .wl-success{ display:none; text-align:center; padding:20px 0; }
+  .wl-success.show{ display:block; }
+  .wl-success .big{ font-family:"Big Shoulders Display", sans-serif; font-size:2.4rem; font-weight:800; color:var(--accent-2); }
+
+  /* ---------- footer ---------- */
+  footer{
+    border-top:1px solid var(--line-soft);
+    padding:32px 0;
+  }
+  .foot-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+    font-size:0.82rem;
+    color:var(--ink-soft);
+  }
+  .foot-row .mono{ font-size:0.76rem; }
+
+  @media (max-width: 880px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .problem-grid{ grid-template-columns:1fr; gap:28px; }
+    .svc-grid{ grid-template-columns:1fr 1fr; }
+    .timeline{ grid-template-columns:1fr 1fr; row-gap:34px; }
+    .timeline::before{ display:none; }
+    .wl-card{ grid-template-columns:1fr; }
+    .wl-info{ border-right:none; border-bottom:1px solid var(--line-soft); }
+    nav.links{ display:none; }
+  }
+  @media (max-width: 520px){
+    .svc-grid{ grid-template-columns:1fr; }
+    .timeline{ grid-template-columns:1fr; }
+    .wrap{ padding:0 18px; }
+    .wl-info, .wl-form{ padding:32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top">
+      <svg class="brand-mark" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="6" cy="15" r="4" stroke="var(--ink)" stroke-width="1.6"/>
+        <circle cx="24" cy="7" r="3" stroke="var(--accent)" stroke-width="1.6"/>
+        <circle cx="24" cy="23" r="3" stroke="var(--accent)" stroke-width="1.6"/>
+        <path d="M9.5 13 L20.5 8" stroke="var(--line)" stroke-width="1.4"/>
+        <path d="M9.5 17 L20.5 22" stroke="var(--line)" stroke-width="1.4"/>
+      </svg>
+      <span class="brand-name">FLOWLOOP <em>AI</em></span>
+    </a>
+    <nav class="links">
+      <a href="#services">Services</a>
+      <a href="#process">Process</a>
+      <a href="#waitlist">Waitlist</a>
+    </nav>
+    <a class="btn small" href="#waitlist">Join waitlist</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero sheet">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow">Automation &amp; web studio — now onboarding founding clients</span>
+          <h1>We wire your business into <span class="accent">one automated loop.</span></h1>
+          <p class="lead">Flowloop AI designs the AI automations that run your busywork and builds the website that gets you found — one studio, one system, shipped fast.</p>
+          <div class="hero-ctas">
+            <a class="btn" href="#waitlist">Join the waitlist →</a>
+            <span class="note">No cost to join · early cohort gets founding pricing</span>
+          </div>
+        </div>
+
+        <div class="diagram-card">
+          <div class="cap">
+            <span>SYS.LOOP — 01</span>
+            <span>SCALE 1:1</span>
+          </div>
+          <svg viewBox="0 0 460 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram: your business connects into Flowloop automation, producing time saved and a live website, feeding back into growth.">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="var(--line)"/>
+              </marker>
+            </defs>
+
+            <path d="M70,150 C110,150 100,60 160,60" fill="none" stroke="var(--line)" stroke-width="1.4" marker-end="url(#arrow)"/>
+            <path d="M70,150 C110,150 100,240 160,240" fill="none" stroke="var(--line)" stroke-width="1.4" marker-end="url(#arrow)"/>
+            <path d="M255,60 C300,60 300,60 340,110" fill="none" stroke="var(--line)" stroke-width="1.4" marker-end="url(#arrow)"/>
+            <path d="M255,240 C300,240 300,240 340,190" fill="none" stroke="var(--line)" stroke-width="1.4" marker-end="url(#arrow)"/>
+            <path d="M400,110 C430,150 430,150 400,190" fill="none" stroke="var(--line-soft)" stroke-width="1.2" stroke-dasharray="3 4"/>
+            <path d="M400,90 C440,150 440,150 400,210" fill="none" stroke="var(--line-soft)" stroke-width="1.2" stroke-dasharray="3 4"/>
+
+            <g>
+              <circle cx="45" cy="150" r="26" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.6"/>
+              <text x="45" y="147" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" fill="var(--ink)">YOUR</text>
+              <text x="45" y="158" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" fill="var(--ink)">BIZ</text>
+            </g>
+
+            <g>
+              <rect x="163" y="35" width="92" height="50" rx="3" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.6"/>
+              <text x="209" y="56" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="8.5" fill="var(--ink)">AI AGENTS</text>
+              <text x="209" y="68" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="8.5" fill="var(--ink-soft)">automate ops</text>
+            </g>
+            <g>
+              <rect x="163" y="215" width="92" height="50" rx="3" fill="var(--surface)" stroke="var(--accent-2)" stroke-width="1.6"/>
+              <text x="209" y="236" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="8.5" fill="var(--ink)">WEBSITE</text>
+              <text x="209" y="248" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="8.5" fill="var(--ink-soft)">gets you found</text>
+            </g>
+
+            <g>
+              <circle cx="378" cy="150" r="30" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.6"/>
+              <text x="378" y="146" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" font-weight="600" fill="var(--accent-ink)">TIME</text>
+              <text x="378" y="158" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" font-weight="600" fill="var(--accent-ink)">BACK</text>
+            </g>
+
+            <text x="230" y="292" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="8" letter-spacing="1" fill="var(--ink-soft)">DASHED = FEEDS GROWTH BACK INTO THE LOOP</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="problem sheet">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="num mono">SEC. 01</span>
+        <span class="title">The problem</span>
+        <span class="rule"></span>
+      </div>
+      <div class="problem-grid">
+        <h2>Most small teams are running on duct tape and browser tabs.</h2>
+        <ul class="problem-list">
+          <li><span class="x">×</span><span><strong>Manual busywork eats the week</strong> — copy-pasting between spreadsheets, inboxes, and CRMs that don't talk to each other.</span></li>
+          <li><span class="x">×</span><span><strong>Leads fall through the cracks</strong> — no system routes, replies to, or follows up on new inquiries automatically.</span></li>
+          <li><span class="x">×</span><span><strong>The website is an afterthought</strong> — outdated, slow, or built on a template that doesn't convert.</span></li>
+          <li><span class="x">×</span><span><strong>"AI" tools pile up unused</strong> — subscriptions nobody has time to configure or connect to real workflows.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="services sheet" id="services">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="num mono">SEC. 02</span>
+        <span class="title">What we build</span>
+        <span class="rule"></span>
+      </div>
+      <div class="svc-grid">
+        <div class="svc">
+          <span class="tag">01 · AUTOMATION</span>
+          <h3>AI Workflow Automation</h3>
+          <p>We map your repetitive processes — support triage, reporting, data entry — and hand them to AI agents that run without you.</p>
+        </div>
+        <div class="svc">
+          <span class="tag">02 · AGENTS</span>
+          <h3>Custom AI Agents</h3>
+          <p>Purpose-built agents for your business logic: drafting replies, qualifying leads, summarizing calls, updating records.</p>
+        </div>
+        <div class="svc">
+          <span class="tag">03 · WEB</span>
+          <h3>Company Websites</h3>
+          <p>Fast, modern sites and landing pages designed to load quickly, rank well, and turn visitors into customers.</p>
+        </div>
+        <div class="svc">
+          <span class="tag">04 · INTEGRATION</span>
+          <h3>Systems Integration</h3>
+          <p>We connect your CRM, inbox, calendar, and spreadsheets into one loop so nothing has to be re-entered twice.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="process sheet" id="process">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="num mono">SEC. 03</span>
+        <span class="title">How an engagement runs</span>
+        <span class="rule"></span>
+      </div>
+      <div class="timeline">
+        <div class="step">
+          <span class="n mono">01</span>
+          <div class="dot"></div>
+          <h3>Audit</h3>
+          <p>We walk through your current tools and find where hours are leaking.</p>
+        </div>
+        <div class="step">
+          <span class="n mono">02</span>
+          <div class="dot"></div>
+          <h3>Design</h3>
+          <p>We map the automations and site structure before writing a line of code.</p>
+        </div>
+        <div class="step">
+          <span class="n mono">03</span>
+          <div class="dot"></div>
+          <h3>Build</h3>
+          <p>Agents, integrations, and your site get built and connected end to end.</p>
+        </div>
+        <div class="step">
+          <span class="n mono">04</span>
+          <div class="dot"></div>
+          <h3>Launch</h3>
+          <p>Everything goes live together — automation running, site public.</p>
+        </div>
+        <div class="step">
+          <span class="n mono">05</span>
+          <div class="dot"></div>
+          <h3>Monitor</h3>
+          <p>We watch what runs, fix what breaks, and tune the loop monthly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="waitlist sheet" id="waitlist">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="num mono">SEC. 04</span>
+        <span class="title">Join the waitlist</span>
+        <span class="rule"></span>
+      </div>
+
+      <div class="wl-card">
+        <div class="wl-info">
+          <span class="eyebrow">Founding cohort · limited slots</span>
+          <h2>Be first in line when we open booking.</h2>
+          <p>Flowloop AI is opening to a small first cohort of businesses. Join the waitlist to get early access, a free automation audit, and founding-client pricing before we open to the public.</p>
+          <ul class="wl-perks">
+            <li><span class="chk">✓</span><span>Free 30-minute automation audit of your current tools</span></li>
+            <li><span class="chk">✓</span><span>Locked-in founding pricing for early members</span></li>
+            <li><span class="chk">✓</span><span>First pick of onboarding slots at launch</span></li>
+          </ul>
+        </div>
+        <div class="wl-form">
+          <form id="waitlist-form" novalidate>
+            <div class="field">
+              <label for="wl-name">Name</label>
+              <input id="wl-name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="wl-email">Work email</label>
+              <input id="wl-email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="field">
+              <label for="wl-company">Company <span style="text-transform:none;">(optional)</span></label>
+              <input id="wl-company" name="company" type="text" autocomplete="organization">
+            </div>
+            <div class="field">
+              <label for="wl-note">What would you want automated first? <span style="text-transform:none;">(optional)</span></label>
+              <textarea id="wl-note" name="note" placeholder="e.g. lead follow-up, invoicing, support replies"></textarea>
+            </div>
+            <button class="btn" type="submit">Join the waitlist</button>
+            <p class="wl-privacy">We'll only email you about Flowloop AI access. No spam, unsubscribe any time.</p>
+            <div class="form-msg" id="wl-msg"></div>
+          </form>
+          <div class="wl-success" id="wl-success">
+            <div class="big">You're on the list.</div>
+            <p style="margin:10px auto 0;">We'll reach out at the email you gave us when your onboarding slot opens.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <span class="mono">FLOWLOOP AI © 2026</span>
+    <span>AI automation &amp; web systems for small teams</span>
+    <a class="mono" href="mailto:hello@flowloopai.com">hello@flowloopai.com</a>
+  </div>
+</footer>
+
+<script>
+  // ---------------------------------------------------------------
+  // Waitlist submit handler.
+  //
+  // To actually collect signups, create a free form endpoint at
+  // https://formspree.io (or any form backend) and paste its
+  // endpoint URL below. Until then, entries are only logged locally
+  // in the browser console and the form still shows a success state.
+  // ---------------------------------------------------------------
+  const FORM_ENDPOINT = ""; // e.g. "https://formspree.io/f/xxxxxxxx"
+
+  const form = document.getElementById('waitlist-form');
+  const msg = document.getElementById('wl-msg');
+  const success = document.getElementById('wl-success');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msg.classList.remove('show', 'ok', 'err');
+
+    const data = new FormData(form);
+    const email = String(data.get('email') || '').trim();
+    const name = String(data.get('name') || '').trim();
+
+    if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      msg.textContent = 'Please enter your name and a valid email address.';
+      msg.classList.add('show', 'err');
+      return;
+    }
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting…';
+
+    try {
+      if (FORM_ENDPOINT) {
+        const res = await fetch(FORM_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: data,
+        });
+        if (!res.ok) throw new Error('Request failed');
+      } else {
+        console.log('[Flowloop waitlist signup]', Object.fromEntries(data.entries()));
+      }
+      form.style.display = 'none';
+      success.classList.add('show');
+    } catch (err) {
+      msg.textContent = "Something went wrong sending that — email us directly at hello@flowloopai.com and we'll add you.";
+      msg.classList.add('show', 'err');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Join the waitlist';
+    }
+  });
+</script>
+
+</body>
+</html>
